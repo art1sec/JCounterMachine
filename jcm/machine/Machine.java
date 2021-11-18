@@ -1,10 +1,8 @@
-package de.msitc.cmachine.cm;
+package jcm.machine;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.ImageIcon;
-
-import de.msitc.cmachine.gui.*;
+import jcm.gui.*;
 
 public class Machine extends Thread {
     

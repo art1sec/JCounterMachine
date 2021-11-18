@@ -1,6 +1,5 @@
 package jcm.gui;
 
-import jcm.CounterMachine;
 import jcm.machine.Machine;
 import jcm.machine.Parser;
 import java.awt.BorderLayout;
@@ -8,12 +7,9 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.URL;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -94,7 +90,7 @@ public class MachineUI {
     pane.add(reset);
     pane.add(run);
     save.addActionListener(e -> {
-        Parser p = new Parser(this);
+        //Parser p = new Parser(this);
         File myfile = new File("cmprogram.cmp");
         JFileChooser saveDialog = new JFileChooser();
         int returnValue = saveDialog.showOpenDialog(frame);

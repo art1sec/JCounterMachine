@@ -1,6 +1,6 @@
-package de.msitc.cmachine.cm;
+package jcm.machine;
 
-import de.msitc.cmachine.gui.*;
+import jcm.gui.*;
 
 public class Parser {
 
