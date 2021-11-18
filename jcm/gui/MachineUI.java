@@ -70,6 +70,8 @@ public class MachineUI {
             c.ipady = 10;
             c.insets = with;
             button = new JButton(Integer.toString(i));
+            button.setEnabled(false);
+            button.setFont(new Font("Sans", Font.BOLD, 12));
             pane.add(button, c);
             c.gridx = 1;
             c.gridy = i;
@@ -86,6 +88,8 @@ public class MachineUI {
             c.gridx = 3;
             c.gridy = i;
             button = new JButton(Character.toString((char) (64 + i)));
+            button.setEnabled(false);
+            button.setFont(new Font("Sans", Font.BOLD, 12));
             pane.add(button, c);
             c.gridx = 4;
             c.gridy = i;
@@ -150,7 +154,17 @@ public class MachineUI {
     public void createAndShowGUI() {
         // if (System.getProperty("os.name").startsWith("Linux")) {
         try {
+            // System:
+            // UIManager.setLookAndFeel(
+            //     UIManager.getSystemLookAndFeelClassName());
+            // Metal:
+            // UIManager.setLookAndFeel(
+            //     UIManager.getCrossPlatformLookAndFeelClassName());
+            // UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            // Nimbus:
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            // Motif:
+            // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
