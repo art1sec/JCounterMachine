@@ -27,6 +27,7 @@ public class Machine extends Thread {
             }
             String com = program[pointer][0];
             if (com.startsWith("S")) {
+                ui.run.setText("Run");
                 stop = true;
                 continue;
             }

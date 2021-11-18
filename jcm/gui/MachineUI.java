@@ -28,14 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.plaf.InsetsUIResource;
 
-@SuppressWarnings("serial")
-class MyButton extends JButton {
-    MyButton(String s) {
-        super(s);
-        this.setFont(new Font("Sans", Font.PLAIN, 16));
-    }
-}
-
 public class MachineUI {
 
     static final boolean shouldFill = true;
@@ -44,7 +36,7 @@ public class MachineUI {
     public int pointer = 0;
     public JFrame frame;
     private JButton button;
-    private MyButton run;
+    public MyButton run;
 
     public JTextField[] prog;
     public JTextField[] reg;
@@ -64,14 +56,18 @@ public class MachineUI {
 
         prog = new JTextField[20];
         point = new JLabel[20];
+        InsetsUIResource with = new InsetsUIResource(0, 8, 0, 0);
+        InsetsUIResource without = new InsetsUIResource(0, 0, 0, 0);
         for (int i = 1; i <= 20; i++) {
             c.gridx = 0;
             c.gridy = i;
             c.ipady = 10;
+            c.insets = with;
             button = new JButton(Integer.toString(i));
             pane.add(button, c);
             c.gridx = 1;
             c.gridy = i;
+            c.insets = without;
             prog[i - 1] = new JTextField(5);
             pane.add(prog[i - 1], c);
             c.gridx = 2;
