@@ -64,7 +64,7 @@ public class Machine extends Thread {
                     movePointer(pointer+1);
                 }
             }
-            if (singleStep || com.startsWith("S")) {
+            if (singleStep || com.startsWith("S") || com.equals("")) {
                 ui.run.setText("Run");
                 stop = true;
                 continue;

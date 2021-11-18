@@ -24,8 +24,8 @@ public class Parser {
             } else {
                 try {
                     String f[] = field.split(" ", 2);
-                    program[i][0] = f[0];
-                    program[i][1] = f[1];
+                    program[i][0] = f[0].toUpperCase();
+                    program[i][1] = f[1].toUpperCase();
                 } catch (Exception e) {
                     program[i][0] = "";
                     program[i][1] = "";
