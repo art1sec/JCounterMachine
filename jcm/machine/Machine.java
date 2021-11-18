@@ -21,7 +21,10 @@ public class Machine extends Thread {
     
     @Override
     public void run() {
-        while (!stop) {
+        while (!stop && !Thread.currentThread().isInterrupted()) {
+            if (Thread.currentThread().isInterrupted()) {
+                System.out.println("STOP!");
+            }
             String com = program[pointer][0];
             if (com.startsWith("S")) {
                 stop = true;
@@ -57,7 +60,8 @@ public class Machine extends Thread {
             try {
                 TimeUnit.MILLISECONDS.sleep(1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                stop = true;
+                // e.printStackTrace();
             }
         }
     }

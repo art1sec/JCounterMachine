@@ -19,12 +19,14 @@ import java.io.ObjectOutputStream;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.plaf.InsetsUIResource;
 
 @SuppressWarnings("serial")
 class MyButton extends JButton {
@@ -42,10 +44,12 @@ public class MachineUI {
     public int pointer = 0;
     public JFrame frame;
     private JButton button;
+    private MyButton run;
 
     public JTextField[] prog;
     public JTextField[] reg;
     public JLabel[] point;
+    private Thread machineThread;
 
     java.net.URL url = getClass().getResource("../res/icons8-left-arrow-48.png");
     ImageIcon ico = new ImageIcon(url, "<<---<");
@@ -87,13 +91,31 @@ public class MachineUI {
             pane.add(reg[i - 1], c);
         }
         setPointer(0, 0);
+        java.net.URL helpURL = getClass().getResource("../res/helptext.html");
+        JEditorPane ePane = new JEditorPane();
+        ePane.setEditable(false);
+        try {
+            ePane.setPage(helpURL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        c.gridx = 5;
+        c.gridy = 1;
+        c.gridheight = 20;
+        c.gridwidth = 2;
+        c.ipadx = 8;
+        c.ipady = 8;
+        c.insets = new InsetsUIResource(4, 12, 4, 12);
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.PAGE_START;
+        pane.add(ePane, c);
     }
 
     private void fillToolBar(Container pane) {
         MyButton load = new MyButton("Load");
         MyButton save = new MyButton("Save");
         MyButton reset = new MyButton("Reset");
-        MyButton run = new MyButton("Run");
+        run = new MyButton("Run");
         pane.add(load);
         pane.add(save);
         pane.add(reset);
@@ -153,9 +175,15 @@ public class MachineUI {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Parser p = new Parser(machine);
-            Thread m = new Machine(machine, p.getProgram(), p.getRegister(), machine.pointer);
-            m.start();
+            if (run.getText().equals("Run")) {
+                run.setText("Stop");
+                Parser p = new Parser(machine);
+                machineThread = new Machine(machine, p.getProgram(), p.getRegister(), machine.pointer);
+                machineThread.start();    
+            } else {
+                machineThread.interrupt();
+                run.setText("Run");
+            }
         }
     }
 
