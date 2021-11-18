@@ -46,7 +46,7 @@ public class MachineUI {
     public JLabel[] point;
     private Thread machineThread;
 
-    java.net.URL url = getClass().getResource("../res/icons8-left-arrow-48.png");
+    java.net.URL url = getClass().getResource("/jcm/res/icons8-left-arrow-48.png");
     ImageIcon ico = new ImageIcon(url, "<<---<");
 
     private void fillGrid(Container pane) {
@@ -91,7 +91,7 @@ public class MachineUI {
             pane.add(reg[i - 1], c);
         }
         setPointer(0, 0);
-        java.net.URL helpURL = getClass().getResource("../res/helptext.html");
+        java.net.URL helpURL = getClass().getResource("/jcm/res/helptext.html");
         JEditorPane ePane = new JEditorPane();
         ePane.setEditable(false);
         ePane.setPreferredSize(new DimensionUIResource(300, 300));
