@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.InsetsUIResource;
 
 public class MachineUI {
@@ -33,6 +34,8 @@ public class MachineUI {
     static final boolean shouldFill = true;
     static final boolean shouldWeightX = true;
 
+    private int speed = 1000;
+    private JTextField speedField;
     public int pointer = 0;
     public JFrame frame;
     private JButton button;
@@ -90,11 +93,23 @@ public class MachineUI {
         java.net.URL helpURL = getClass().getResource("../res/helptext.html");
         JEditorPane ePane = new JEditorPane();
         ePane.setEditable(false);
+        ePane.setPreferredSize(new DimensionUIResource(300, 300));
         try {
             ePane.setPage(helpURL);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        c.gridx = 3;
+        c.gridy = 8;
+        c.gridwidth = 2;
+        c.gridheight = 2;
+        c.ipadx = 0;
+        c.ipady = 0;
+        c.insets = without;
+        speedField = new JTextField(5);
+        speedField.setBorder(BorderFactory.createTitledBorder("Speed (ms):"));
+        speedField.setText(String.valueOf(speed));
+        pane.add(speedField,c );
         c.gridx = 5;
         c.gridy = 1;
         c.gridheight = 20;
@@ -174,7 +189,8 @@ public class MachineUI {
             if (run.getText().equals("Run")) {
                 run.setText("Stop");
                 Parser p = new Parser(machine);
-                machineThread = new Machine(machine, p.getProgram(), p.getRegister(), machine.pointer);
+                speed = Integer.parseInt(speedField.getText());
+                machineThread = new Machine(machine, p.getProgram(), p.getRegister(), pointer, speed);
                 machineThread.start();    
             } else {
                 machineThread.interrupt();

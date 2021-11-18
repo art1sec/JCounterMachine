@@ -2,8 +2,42 @@
 	<head>
 	</head>
 	<body>
-		<h2>Bedienung</h2>
-		<p>Hier ein bisschen Text</p>
+		<!-- <h1>Function</h1> -->
+		<p>This is a simple implementation of a
+			<a href="https://en.wikipedia.org/wiki/Counter_machine">counter machine</a>
+			inspired by the <a href="https://en.wikipedia.org/wiki/WDR_paper_computer">
+			paper computer</a> introduced by german television in 1983.
+		</p>
+		<p>
+			<table border="1">
+				<tr>
+					<th>Command</th>
+					<th>Function</th>
+				</tr>
+				<tr>
+					<td>+&nbsp;X</td>
+					<td>increments the value of register X</td>
+				</tr>
+				<tr>
+					<td>-&nbsp;X</td>
+					<td>decrements the value of register X</td>
+				</tr>
+				<tr>
+					<td>0&nbsp;X</td>
+					<td>checks if the value of register X is zero.
+						if true, move pointer to steps forward,
+						else move the pointer only one step forward.
+					</td>
+				</tr>
+				<tr>
+					<td>Stop</td>
+					<td>terminates the execution of the program. this
+						is the only command that doesn't need an
+						argument (register or address).
+					</td>
+				</tr>
+			</table>
+		</p>
 	</body>
 </html>
 

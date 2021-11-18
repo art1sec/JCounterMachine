@@ -8,6 +8,6 @@ import javax.swing.JButton;
 public class MyButton extends JButton {
     MyButton(String s) {
         super(s);
-        this.setFont(new Font("Sans", Font.BOLD, 16));
+        this.setFont(new Font("Sans", Font.PLAIN, 16));
     }
 }

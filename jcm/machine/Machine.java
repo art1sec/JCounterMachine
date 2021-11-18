@@ -6,16 +6,18 @@ import jcm.gui.*;
 
 public class Machine extends Thread {
     
+    private int speed;
     private int pointer;
     private int[] register;
     private String[][] program;
     private MachineUI ui;
     private boolean stop = false;
     
-    public Machine(MachineUI ui, String[][] pr, int[] r, int p) {
-        this.program = pr;
-        this.register = r;
-        this.pointer = p;
+    public Machine(MachineUI ui, String[][] program, int[] register, int pointer, int speed) {
+        this.program = program;
+        this.register = register;
+        this.pointer = pointer;
+        this.speed = speed;
         this.ui = ui;
     }
     
@@ -59,7 +61,7 @@ public class Machine extends Thread {
                 }
             }
             try {
-                TimeUnit.MILLISECONDS.sleep(1000);
+                TimeUnit.MILLISECONDS.sleep(speed);
             } catch (InterruptedException e) {
                 stop = true;
                 // e.printStackTrace();
