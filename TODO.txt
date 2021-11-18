@@ -1,0 +1,15 @@
+
+* Add menu bar
+File 
+     - open
+     - save
+     - exit
+Hint 
+     - load example addition
+     - load example multiplication
+About
+     - Author
+     - Licence
+
+* Remember last selected directory
+
