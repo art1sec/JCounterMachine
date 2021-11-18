@@ -19,6 +19,7 @@ import java.io.ObjectOutputStream;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -42,6 +43,7 @@ public class MachineUI {
     public JFrame frame;
     private JButton button;
     public MyButton run;
+    private JCheckBox singleStep;
 
     public JTextField[] prog;
     public JTextField[] reg;
@@ -107,7 +109,7 @@ public class MachineUI {
             e.printStackTrace();
         }
         c.gridx = 3;
-        c.gridy = 8;
+        c.gridy = 18;
         c.gridwidth = 2;
         c.gridheight = 2;
         c.ipadx = 0;
@@ -116,7 +118,13 @@ public class MachineUI {
         speedField = new JTextField(5);
         speedField.setBorder(BorderFactory.createTitledBorder("Speed (ms):"));
         speedField.setText(String.valueOf(speed));
-        pane.add(speedField,c );
+        pane.add(speedField, c);
+        c.gridx = 3;
+        c.gridy = 20;
+        c.gridwidth = 2;
+        c.gridheight = 1;
+        singleStep = new JCheckBox("Single step", false);
+        pane.add(singleStep, c);
         c.gridx = 5;
         c.gridy = 1;
         c.gridheight = 20;
@@ -217,7 +225,13 @@ public class MachineUI {
                 run.setText("Stop");
                 Parser p = new Parser(machine);
                 speed = Integer.parseInt(speedField.getText());
-                machineThread = new Machine(machine, p.getProgram(), p.getRegister(), pointer, speed);
+                machineThread = new Machine(
+                    machine,
+                    p.getProgram(),
+                    p.getRegister(),
+                    pointer,
+                    speed,
+                    singleStep.isSelected());
                 machineThread.start();    
             } else {
                 machineThread.interrupt();

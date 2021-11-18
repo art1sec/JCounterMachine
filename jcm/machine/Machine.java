@@ -12,13 +12,22 @@ public class Machine extends Thread {
     private String[][] program;
     private MachineUI ui;
     private boolean stop = false;
+    private boolean singleStep = false;
     
-    public Machine(MachineUI ui, String[][] program, int[] register, int pointer, int speed) {
+    public Machine(
+            MachineUI ui,
+            String[][] program,
+            int[] register,
+            int pointer,
+            int speed,
+            boolean singleStep)
+    {
+        this.ui = ui;
         this.program = program;
         this.register = register;
         this.pointer = pointer;
         this.speed = speed;
-        this.ui = ui;
+        this.singleStep = singleStep;
     }
     
     @Override
@@ -28,11 +37,6 @@ public class Machine extends Thread {
                 System.out.println("STOP!");
             }
             String com = program[pointer][0];
-            if (com.startsWith("S")) {
-                ui.run.setText("Run");
-                stop = true;
-                continue;
-            }
             if (com.equals("+")) {
                 char c = program[pointer][1].charAt(0);
                 int r = ((int) c - 65);
@@ -59,6 +63,11 @@ public class Machine extends Thread {
                 } else {
                     movePointer(pointer+1);
                 }
+            }
+            if (singleStep || com.startsWith("S")) {
+                ui.run.setText("Run");
+                stop = true;
+                continue;
             }
             try {
                 TimeUnit.MILLISECONDS.sleep(speed);
