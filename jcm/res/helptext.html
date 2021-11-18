@@ -2,7 +2,7 @@
 	<head>
 	</head>
 	<body>
-		<!-- <h1>Function</h1> -->
+		<h1>art1secs<br>counter machine</h1>
 		<p>This is a simple implementation of a
 			<a href="https://en.wikipedia.org/wiki/Counter_machine">counter machine</a>
 			inspired by the <a href="https://en.wikipedia.org/wiki/WDR_paper_computer">
@@ -16,18 +16,22 @@
 				</tr>
 				<tr>
 					<td>+&nbsp;X</td>
-					<td>increments the value of register X</td>
+					<td>increments the value of register X by 1</td>
 				</tr>
 				<tr>
 					<td>-&nbsp;X</td>
-					<td>decrements the value of register X</td>
+					<td>decrements the value of register X by 1</td>
 				</tr>
 				<tr>
 					<td>0&nbsp;X</td>
 					<td>checks if the value of register X is zero.
-						if true, move pointer to steps forward,
+						if true, move pointer two steps forward,
 						else move the pointer only one step forward.
 					</td>
+				</tr>
+				<tr>
+					<td>J&nbsp;Y</td>
+					<td>moves the pointer to memory address Y</td>
 				</tr>
 				<tr>
 					<td>Stop</td>
@@ -38,6 +42,15 @@
 				</tr>
 			</table>
 		</p>
+		<p>
+			<b>NB</b>: please note that you have to enter <i>exactly</i>
+			one command character (+, -, 0, J), a single empty space and
+			an argument (a register (A-Z) or a memory address(1-20)). only
+			the stop command doesn't need an argument. you can abreviate
+			"Stop" with "S".
+		</p>
+		<p>
+			<b>Have a lot of fun!</b>
+		</p>
 	</body>
 </html>
-

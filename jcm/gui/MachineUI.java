@@ -24,7 +24,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.InsetsUIResource;
@@ -126,17 +128,22 @@ public class MachineUI {
     private void fillToolBar(Container pane) {
         MyButton load = new MyButton("Load");
         MyButton save = new MyButton("Save");
+        MyButton clear = new MyButton("Clear");
         MyButton reset = new MyButton("Reset");
         run = new MyButton("Run");
         pane.add(load);
         pane.add(save);
+        pane.add(clear);
         pane.add(reset);
         pane.add(run);
         load.addActionListener(new LoadProgram());
         save.addActionListener(new SaveProgram(this));
-        reset.addActionListener(e -> {
-            setPointer(pointer, 0);
+        clear.addActionListener(e -> {
+            for (int i = 0; i < 20; i++) {
+                prog[i].setText("");
+            }
         });
+        reset.addActionListener(e -> { setPointer(pointer, 0); });
         run.addActionListener(new RunProgram(this));
     }
 
@@ -152,15 +159,20 @@ public class MachineUI {
         frame = new JFrame("Simple Counter Machine");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel head = new JLabel("Simple Counter Machine");
-        head.setFont(new Font("Sans", Font.PLAIN, 20));
-        head.setHorizontalAlignment(JLabel.CENTER);
-        head.setBorder(BorderFactory.createEmptyBorder(8, 0, 16, 0));
-        frame.add(head, BorderLayout.NORTH);
+        // JLabel head = new JLabel("Simple Counter Machine");
+        // head.setFont(new Font("Sans", Font.PLAIN, 20));
+        // head.setHorizontalAlignment(JLabel.CENTER);
+        // head.setBorder(BorderFactory.createEmptyBorder(8, 0, 16, 0));
+        // frame.add(head, BorderLayout.NORTH);
 
         JPanel panel = new JPanel();
         fillGrid(panel);
-        frame.add(panel);
+
+        JScrollPane scrollPane = new JScrollPane(panel);
+        //     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER,
+        //     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        frame.add(scrollPane);
 
         JPanel toolbar = new JPanel();
         fillToolBar(toolbar);
