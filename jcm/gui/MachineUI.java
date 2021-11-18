@@ -50,6 +50,7 @@ public class MachineUI {
     ImageIcon ico = new ImageIcon(url, "<<---<");
 
     private void fillGrid(Container pane) {
+        System.out.println(url);
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         if (shouldFill) {
