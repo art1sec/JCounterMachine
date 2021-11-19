@@ -17,13 +17,19 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.plaf.DimensionUIResource;
@@ -41,6 +47,7 @@ public class MachineUI {
     private JCheckBox singleStep;
     private ToolbarButton run;
     private DisabledButton button;
+    private File lastPath;
 
     private Thread machineThread;
 
@@ -111,6 +118,7 @@ public class MachineUI {
             c.gridx = 2;
             c.gridy = i;
             pointerLabel[i - 1] = new JLabel();
+            pointerLabel[i - 1].setPreferredSize(new DimensionUIResource(64, 0));
             pane.add(pointerLabel[i - 1], c);
         }
 
@@ -206,6 +214,53 @@ public class MachineUI {
         run.addActionListener(new RunProgram());
     }
 
+    private JMenuBar fillMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem openMenuItem = new JMenuItem("Open");
+        fileMenu.add(openMenuItem);
+        openMenuItem.addActionListener(new LoadProgram());
+        JMenuItem saveMenuItem = new JMenuItem("Save");
+        fileMenu.add(saveMenuItem);
+        saveMenuItem.addActionListener(new SaveProgram());
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        fileMenu.add(exitMenuItem);
+        exitMenuItem.addActionListener(e -> {
+            if (machineThread != null) { machineThread.interrupt(); }
+            System.exit(0);
+        });
+        menuBar.add(fileMenu);
+
+        JMenu aboutMenu = new JMenu("About");
+        JMenuItem aboutMenuItem = new JMenuItem("About");
+        aboutMenu.add(aboutMenuItem);
+        aboutMenuItem.addActionListener(e -> { showAboutDialog(); });
+        menuBar.add(aboutMenu);
+
+        return menuBar;
+    }
+
+    private void showAboutDialog() {
+        JDialog dialog = new JDialog(frame, "About", true);
+        java.net.URL aboutURL = getClass().getResource("/jcm/res/about.html");
+        JEditorPane aboutPane = new JEditorPane();
+        aboutPane.setEditable(false);
+        //aboutPane.setPreferredSize(new DimensionUIResource(300, 300));
+        try {
+            aboutPane.setPage(aboutURL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        dialog.add(aboutPane);
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> { dialog.dispose(); });
+        dialog.add(closeButton, BorderLayout.SOUTH);
+        dialog.setSize(600, 400);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setVisible(true);
+    }
+
     /**
      * this is the gui starter method invoked to initialize the gui
      */
@@ -220,6 +275,8 @@ public class MachineUI {
         // create frame
         frame = new JFrame("Simple Counter Machine");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setJMenuBar(fillMenuBar());
 
         // create a panel which holds the central grid layout
         JPanel panel = new JPanel();
@@ -265,10 +322,11 @@ public class MachineUI {
         public void actionPerformed(ActionEvent e) {
             File myfile = new File("cmprogram.cmp");
             JFileChooser saveDialog = new JFileChooser();
-            int returnValue = saveDialog.showOpenDialog(frame);
+            if (lastPath != null) { saveDialog.setCurrentDirectory(lastPath); }
+            int returnValue = saveDialog.showSaveDialog(frame);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 myfile = saveDialog.getSelectedFile();
-                System.out.println(myfile.getAbsoluteFile());
+                lastPath = new File(myfile.getParent());
                 try {
                     FileOutputStream fos = new FileOutputStream(myfile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -278,8 +336,6 @@ public class MachineUI {
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
-            } else {
-                System.out.println("canceled");
             }
         }
     }
@@ -288,9 +344,11 @@ public class MachineUI {
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser loadDialog = new JFileChooser();
+            if (lastPath != null) { loadDialog.setCurrentDirectory(lastPath); }
             int returnValue = loadDialog.showOpenDialog(frame);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File myfile = loadDialog.getSelectedFile();
+                lastPath = new File(myfile.getParent());
                 String[][] program = new String[20][2];
                 try {
                     FileInputStream fis = new FileInputStream(myfile);
