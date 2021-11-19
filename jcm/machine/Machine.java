@@ -71,13 +71,12 @@ public class Machine extends Thread {
                 TimeUnit.MILLISECONDS.sleep(speed);
             } catch (InterruptedException e) {
                 stop = true;
-                // e.printStackTrace();
             }
         }
     }
     
     private void movePointer(int next) {
-        ui.setPointer(next);
         pointer = next;
+        ui.setPointer(pointer);
     }
 }

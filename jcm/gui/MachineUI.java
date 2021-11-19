@@ -79,6 +79,11 @@ public class MachineUI {
         registerField[number].setText(value);
     }
 
+    /**
+     * The central gui method that fills the given pane with the grid
+     * that holds nearly all elements (besides the buttons at the buttom).
+     * @param pane
+     */
     private void fillGrid(Container pane) {
         // create grid bag layout
         pane.setLayout(new GridBagLayout());
@@ -172,17 +177,24 @@ public class MachineUI {
         pane.add(ePane, c);
     }
 
+    /**
+     * populates the buttom of the frame with buttons
+     * @param pane
+     */
     private void fillToolBar(Container pane) {
+        // create buttons
         ToolbarButton load = new ToolbarButton("Load");
         ToolbarButton save = new ToolbarButton("Save");
         ToolbarButton clear = new ToolbarButton("Clear");
         ToolbarButton reset = new ToolbarButton("Reset");
         run = new ToolbarButton("Run");
+        // add buttons to the panel
         pane.add(load);
         pane.add(save);
         pane.add(clear);
         pane.add(reset);
         pane.add(run);
+        // add action listener to the buttons
         load.addActionListener(new LoadProgram());
         save.addActionListener(new SaveProgram());
         clear.addActionListener(e -> {
