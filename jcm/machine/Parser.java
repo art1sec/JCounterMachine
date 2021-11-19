@@ -8,8 +8,8 @@ public class Parser {
     private int[] register;
     private String[][] program;
 
-    public Parser(MachineUI m) {
-        this.machine = m;
+    public Parser(MachineUI machine) {
+        this.machine = machine;
         register = new int[6];
         program = new String[20][2];
         parseProgram();
@@ -17,7 +17,7 @@ public class Parser {
 
     public void parseProgram() {
         for (int i = 0; i < 20; i++) {
-            String field = machine.prog[i].getText();
+            String field = machine.getProgramField(i);
             if (field.equals("Stop")) {
                 program[i][0] = "Stop";
                 program[i][1] = "";
@@ -33,8 +33,8 @@ public class Parser {
             }
         }
         for (int i = 0; i < 6; i++) {
-            if (machine.reg[i].getText().length() > 0) {
-                register[i] = Integer.parseInt(machine.reg[i].getText());
+            if (machine.getRegisterField(i).length() > 0) {
+                register[i] = Integer.parseInt(machine.getRegisterField(i));
             } else {
                 register[i] = 0;
             }
@@ -42,9 +42,6 @@ public class Parser {
     }
 
     public String[][] getProgram() {
-        // for (String[] s: program) {
-        // System.out.println(s[0]+" "+s[1]);
-        // }
         return program;
     }
 

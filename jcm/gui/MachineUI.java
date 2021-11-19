@@ -36,12 +36,12 @@ public class MachineUI {
     private JLabel[] pointerLabel;
     private int speed = 1000;
     private JTextField speedField;
+    private JTextField[] programField;
+    private JTextField[] registerField;
     private JCheckBox singleStep;
     private ToolbarButton run;
     private DisabledButton button;
 
-    public JTextField[] prog;
-    public JTextField[] reg;
     private Thread machineThread;
 
     java.net.URL arrow = getClass().getResource("/jcm/res/icons8-left-arrow-48.png");
@@ -67,6 +67,18 @@ public class MachineUI {
         return Integer.parseInt(speedField.getText());
     }
 
+    public String getProgramField(int i) {
+        return programField[i].getText();
+    }
+
+    public String getRegisterField(int i) {
+        return registerField[i].getText();
+    }
+
+    public void setRegisterField(int number, String value) {
+        registerField[number].setText(value);
+    }
+
     private void fillGrid(Container pane) {
         // create grid bag layout
         pane.setLayout(new GridBagLayout());
@@ -75,7 +87,7 @@ public class MachineUI {
         // fill grid with 20 buttons and 20 text fields
         // for the program memory prog[] and 20 empty labels
         // in which the pointer (point|arrow) will move:
-        prog = new JTextField[20];
+        programField = new JTextField[20];
         pointerLabel = new JLabel[20];
         InsetsUIResource with = new InsetsUIResource(0, 8, 0, 0);
         InsetsUIResource without = new InsetsUIResource(0, 0, 0, 0);
@@ -89,8 +101,8 @@ public class MachineUI {
             c.gridx = 1;
             c.gridy = i;
             c.insets = without;
-            prog[i - 1] = new JTextField(5);
-            pane.add(prog[i - 1], c);
+            programField[i - 1] = new JTextField(5);
+            pane.add(programField[i - 1], c);
             c.gridx = 2;
             c.gridy = i;
             pointerLabel[i - 1] = new JLabel();
@@ -99,7 +111,7 @@ public class MachineUI {
 
         // fill the right part of the grid with 6 buttons
         // and six text fields for the registers reg[]:
-        reg = new JTextField[6];
+        registerField = new JTextField[6];
         for (int i = 1; i <= 6; i++) {
             c.gridx = 3;
             c.gridy = i;
@@ -107,8 +119,8 @@ public class MachineUI {
             pane.add(button, c);
             c.gridx = 4;
             c.gridy = i;
-            reg[i - 1] = new JTextField(5);
-            pane.add(reg[i - 1], c);
+            registerField[i - 1] = new JTextField(5);
+            pane.add(registerField[i - 1], c);
         }
 
         // set the pointer initially to memory address 1:
@@ -175,7 +187,7 @@ public class MachineUI {
         save.addActionListener(new SaveProgram());
         clear.addActionListener(e -> {
             for (int i = 0; i < 20; i++) {
-                prog[i].setText("");
+                programField[i].setText("");
             }
         });
         reset.addActionListener(e -> { setPointer(0); });
@@ -279,7 +291,7 @@ public class MachineUI {
                     cnfe.printStackTrace();
                 }
                 for (int i = 0; i < 20; i++) {
-                    prog[i].setText(program[i][0]+" "+program[i][1]);
+                    programField[i].setText(program[i][0]+" "+program[i][1]);
                 }
             }
         }

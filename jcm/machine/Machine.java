@@ -39,14 +39,14 @@ public class Machine extends Thread {
                 char c = program[pointer][1].charAt(0);
                 int r = ((int) c - 65);
                 register[r] += 1;
-                ui.reg[r].setText(String.valueOf(register[r]));
+                ui.setRegisterField(r, String.valueOf(register[r]));
                 movePointer(pointer+1);
             }
             if (com.equals("-")) {
                 char c = program[pointer][1].charAt(0);
                 int r = ((int) c - 65);
                 register[r] -= 1;
-                ui.reg[r].setText(String.valueOf(register[r]));
+                ui.setRegisterField(r, String.valueOf(register[r]));
                 movePointer(pointer+1);
             }
             if (com.equals("J")) {
