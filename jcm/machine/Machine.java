@@ -18,15 +18,13 @@ public class Machine extends Thread {
             MachineUI ui,
             String[][] program,
             int[] register,
-            int pointer,
-            int speed,
             boolean singleStep)
     {
         this.ui = ui;
         this.program = program;
         this.register = register;
-        this.pointer = pointer;
-        this.speed = speed;
+        this.pointer = ui.getPointer();
+        this.speed = ui.getSpeed();
         this.singleStep = singleStep;
     }
     
@@ -65,7 +63,7 @@ public class Machine extends Thread {
                 }
             }
             if (singleStep || com.startsWith("S") || com.equals("")) {
-                ui.run.setText("Run");
+                ui.labelRunButton("Run");
                 stop = true;
                 continue;
             }
@@ -79,7 +77,7 @@ public class Machine extends Thread {
     }
     
     private void movePointer(int next) {
-        ui.setPointer(pointer, next);
+        ui.setPointer(next);
         pointer = next;
     }
 }

@@ -4,7 +4,6 @@ import jcm.machine.Machine;
 import jcm.machine.Parser;
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -18,7 +17,6 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
@@ -27,43 +25,58 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.InsetsUIResource;
 
 public class MachineUI {
 
-    static final boolean shouldFill = true;
-    static final boolean shouldWeightX = true;
-
+    private JFrame frame;
+    private int pointer = 0;
+    private JLabel[] pointerLabel;
     private int speed = 1000;
     private JTextField speedField;
-    public int pointer = 0;
-    public JFrame frame;
-    private JButton button;
-    public MyButton run;
     private JCheckBox singleStep;
+    private ToolbarButton run;
+    private DisabledButton button;
 
     public JTextField[] prog;
     public JTextField[] reg;
-    public JLabel[] point;
     private Thread machineThread;
 
-    java.net.URL url = getClass().getResource("/jcm/res/icons8-left-arrow-48.png");
-    ImageIcon ico = new ImageIcon(url, "<<---<");
+    java.net.URL arrow = getClass().getResource("/jcm/res/icons8-left-arrow-48.png");
+    java.net.URL trans = getClass().getResource("/jcm/res/icons8-transparent-48.png");
+    ImageIcon arrowIcon = new ImageIcon(arrow);
+    ImageIcon transparentIcon = new ImageIcon(trans);
+
+    public void setPointer(int next) {
+        pointerLabel[pointer].setIcon(transparentIcon);
+        pointerLabel[next].setIcon(arrowIcon);
+        pointer = next;
+    }
+
+    public int getPointer() {
+        return pointer;
+    }
+
+    public void labelRunButton(String s) {
+        run.setText(s);
+    }
+
+    public int getSpeed() {
+        return Integer.parseInt(speedField.getText());
+    }
 
     private void fillGrid(Container pane) {
-        System.out.println(url);
+        // create grid bag layout
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        if (shouldFill) {
-            // natural height; maximum width
-            c.fill = GridBagConstraints.HORIZONTAL;
-        }
-
+    
+        // fill grid with 20 buttons and 20 text fields
+        // for the program memory prog[] and 20 empty labels
+        // in which the pointer (point|arrow) will move:
         prog = new JTextField[20];
-        point = new JLabel[20];
+        pointerLabel = new JLabel[20];
         InsetsUIResource with = new InsetsUIResource(0, 8, 0, 0);
         InsetsUIResource without = new InsetsUIResource(0, 0, 0, 0);
         for (int i = 1; i <= 20; i++) {
@@ -71,9 +84,7 @@ public class MachineUI {
             c.gridy = i;
             c.ipady = 10;
             c.insets = with;
-            button = new JButton(Integer.toString(i));
-            button.setEnabled(false);
-            button.setFont(new Font("Sans", Font.BOLD, 12));
+            button = new DisabledButton(Integer.toString(i));
             pane.add(button, c);
             c.gridx = 1;
             c.gridy = i;
@@ -82,32 +93,28 @@ public class MachineUI {
             pane.add(prog[i - 1], c);
             c.gridx = 2;
             c.gridy = i;
-            point[i - 1] = new JLabel("     ");
-            pane.add(point[i - 1], c);
+            pointerLabel[i - 1] = new JLabel();
+            pane.add(pointerLabel[i - 1], c);
         }
+
+        // fill the right part of the grid with 6 buttons
+        // and six text fields for the registers reg[]:
         reg = new JTextField[6];
         for (int i = 1; i <= 6; i++) {
             c.gridx = 3;
             c.gridy = i;
-            button = new JButton(Character.toString((char) (64 + i)));
-            button.setEnabled(false);
-            button.setFont(new Font("Sans", Font.BOLD, 12));
+            button = new DisabledButton(Character.toString((char) (64 + i)));
             pane.add(button, c);
             c.gridx = 4;
             c.gridy = i;
             reg[i - 1] = new JTextField(5);
             pane.add(reg[i - 1], c);
         }
-        setPointer(0, 0);
-        java.net.URL helpURL = getClass().getResource("/jcm/res/helptext.html");
-        JEditorPane ePane = new JEditorPane();
-        ePane.setEditable(false);
-        ePane.setPreferredSize(new DimensionUIResource(300, 300));
-        try {
-            ePane.setPage(helpURL);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        // set the pointer initially to memory address 1:
+        setPointer(0);
+
+        // put a text field for the speed on the grid:
         c.gridx = 3;
         c.gridy = 18;
         c.gridwidth = 2;
@@ -119,12 +126,28 @@ public class MachineUI {
         speedField.setBorder(BorderFactory.createTitledBorder("Speed (ms):"));
         speedField.setText(String.valueOf(speed));
         pane.add(speedField, c);
+
+        // put a checkbox for single step on the grid:
         c.gridx = 3;
         c.gridy = 20;
         c.gridwidth = 2;
         c.gridheight = 1;
         singleStep = new JCheckBox("Single step", false);
         pane.add(singleStep, c);
+
+        // create an editor pane at the very right of the frame
+        // which holds the html description:
+        java.net.URL helpURL = getClass().getResource("/jcm/res/helptext.html");
+        JEditorPane ePane = new JEditorPane();
+        ePane.setEditable(false);
+        ePane.setPreferredSize(new DimensionUIResource(300, 300));
+        try {
+            ePane.setPage(helpURL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // put the editor pane on the grid:
         c.gridx = 5;
         c.gridy = 1;
         c.gridheight = 20;
@@ -138,99 +161,72 @@ public class MachineUI {
     }
 
     private void fillToolBar(Container pane) {
-        MyButton load = new MyButton("Load");
-        MyButton save = new MyButton("Save");
-        MyButton clear = new MyButton("Clear");
-        MyButton reset = new MyButton("Reset");
-        run = new MyButton("Run");
+        ToolbarButton load = new ToolbarButton("Load");
+        ToolbarButton save = new ToolbarButton("Save");
+        ToolbarButton clear = new ToolbarButton("Clear");
+        ToolbarButton reset = new ToolbarButton("Reset");
+        run = new ToolbarButton("Run");
         pane.add(load);
         pane.add(save);
         pane.add(clear);
         pane.add(reset);
         pane.add(run);
         load.addActionListener(new LoadProgram());
-        save.addActionListener(new SaveProgram(this));
+        save.addActionListener(new SaveProgram());
         clear.addActionListener(e -> {
             for (int i = 0; i < 20; i++) {
                 prog[i].setText("");
             }
         });
-        reset.addActionListener(e -> { setPointer(pointer, 0); });
-        run.addActionListener(new RunProgram(this));
+        reset.addActionListener(e -> { setPointer(0); });
+        run.addActionListener(new RunProgram());
     }
 
+    /**
+     * this is the gui starter method invoked to initialize the gui
+     */
     public void createAndShowGUI() {
-        // if (System.getProperty("os.name").startsWith("Linux")) {
+        // set look and feel to nimbus
         try {
-            // System:
-            // UIManager.setLookAndFeel(
-            //     UIManager.getSystemLookAndFeelClassName());
-            // Metal:
-            // UIManager.setLookAndFeel(
-            //     UIManager.getCrossPlatformLookAndFeelClassName());
-            // UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-            // Nimbus:
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            // Motif:
-            // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // }
 
+        // create frame
         frame = new JFrame("Simple Counter Machine");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // JLabel head = new JLabel("Simple Counter Machine");
-        // head.setFont(new Font("Sans", Font.PLAIN, 20));
-        // head.setHorizontalAlignment(JLabel.CENTER);
-        // head.setBorder(BorderFactory.createEmptyBorder(8, 0, 16, 0));
-        // frame.add(head, BorderLayout.NORTH);
-
+        // create a panel which holds the central grid layout
         JPanel panel = new JPanel();
         fillGrid(panel);
 
+        // add the panel to a scroll pane
         JScrollPane scrollPane = new JScrollPane(panel);
-        //     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER,
-        //     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        frame.add(scrollPane);
-
+        // create a panel with buttons for the buttom toolbar
         JPanel toolbar = new JPanel();
         fillToolBar(toolbar);
-        toolbar.setFont(new Font("Sans", Font.PLAIN, 16));
+
+        // add scroll pane and button toolbar to the frame
+        frame.add(scrollPane);
         frame.add(toolbar, BorderLayout.SOUTH);
 
         frame.pack();
         frame.setVisible(true);
     }
 
-    public void setPointer(int old, int next) {
-        point[pointer].setIcon(null);
-        point[next].setIcon(ico);
-        // System.out.println(url);
-        pointer = next;
-    }
-
     class RunProgram implements ActionListener {
-        private MachineUI machine;
-
-        RunProgram(MachineUI m) {
-            this.machine = m;
-        }
-
         @Override
         public void actionPerformed(ActionEvent e) {
             if (run.getText().equals("Run")) {
                 run.setText("Stop");
-                Parser p = new Parser(machine);
+                Parser p = new Parser(MachineUI.this);
                 speed = Integer.parseInt(speedField.getText());
                 machineThread = new Machine(
-                    machine,
+                    MachineUI.this,
                     p.getProgram(),
                     p.getRegister(),
-                    pointer,
-                    speed,
                     singleStep.isSelected());
                 machineThread.start();    
             } else {
@@ -241,12 +237,6 @@ public class MachineUI {
     }
 
     class SaveProgram implements ActionListener {
-        private MachineUI machine;
-
-        SaveProgram(MachineUI m) {
-            this.machine = m;
-        }
-
         @Override
         public void actionPerformed(ActionEvent e) {
             File myfile = new File("cmprogram.cmp");
@@ -258,7 +248,7 @@ public class MachineUI {
                 try {
                     FileOutputStream fos = new FileOutputStream(myfile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    Parser p = new Parser(machine);
+                    Parser p = new Parser(MachineUI.this);
                     oos.writeObject(p.getProgram());
                     oos.close();
                 } catch (IOException ioe) {
