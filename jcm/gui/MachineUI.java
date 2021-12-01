@@ -201,7 +201,7 @@ public class MachineUI {
         pane.add(clear);
         pane.add(reset);
         pane.add(run);
-        // add action listener to the buttons
+        // add action listeners to the buttons
         load.addActionListener(new LoadProgram());
         save.addActionListener(new SaveProgram());
         clear.addActionListener(e -> {
@@ -245,7 +245,6 @@ public class MachineUI {
         java.net.URL aboutURL = getClass().getResource("/jcm/res/about.html");
         JEditorPane aboutPane = new JEditorPane();
         aboutPane.setEditable(false);
-        //aboutPane.setPreferredSize(new DimensionUIResource(300, 300));
         try {
             aboutPane.setPage(aboutURL);
         } catch (IOException e) {

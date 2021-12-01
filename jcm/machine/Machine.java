@@ -30,11 +30,11 @@ public class Machine extends Thread {
     
     @Override
     public void run() {
-        while (!stop && !Thread.currentThread().isInterrupted()) {
-            if (Thread.currentThread().isInterrupted()) {
-                System.out.println("STOP!");
-            }
+        while (!stop) {
             String com = program[pointer][0];
+            if (Thread.currentThread().isInterrupted()) {
+                com = "Stop";
+            }
             if (com.equals("+")) {
                 char c = program[pointer][1].charAt(0);
                 int r = ((int) c - 65);
