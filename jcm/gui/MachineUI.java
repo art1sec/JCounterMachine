@@ -53,10 +53,11 @@ public class MachineUI {
     java.net.URL arrow = getClass().getResource("/jcm/res/icons8-left-arrow-48.png");
     java.net.URL trans = getClass().getResource("/jcm/res/icons8-transparent-48.png");
     ImageIcon arrowIcon = new ImageIcon(arrow);
-    ImageIcon transparentIcon = new ImageIcon(trans);
+    // ImageIcon transparentIcon = new ImageIcon(trans);
 
     public void setPointer(int next) {
-        pointerLabel[pointer].setIcon(transparentIcon);
+        // pointerLabel[pointer].setIcon(transparentIcon);
+        pointerLabel[pointer].setIcon(null);
         pointerLabel[next].setIcon(arrowIcon);
         pointer = next;
     }
