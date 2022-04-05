@@ -5,4 +5,4 @@ This is a simple implementation of a [counter machine](https://en.wikipedia.org/
 
 ---
 
-![Screenshot](JCounterMachine.png)
+![Screenshot](doc/JCounterMachine.png)
